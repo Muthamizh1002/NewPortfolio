@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muthamizh S | Senior .NET Full Stack Developer</title>
+  <meta name="description" content="Portfolio of Muthamizh S, Senior .NET Full Stack Developer with 5+ years experience building enterprise applications with C#, ASP.NET Core, SQL Server, and Azure.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fira+Code:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <!-- Loading Screen -->
+  <div id="loader">
+    <div class="loader-content">
+      <div class="spinner-ring"></div>
+      <div class="loader-text">Loading Muthamizh's Portfolio</div>
+      <div class="progress-bar-container">
+        <div id="progress-bar"></div>
+      </div>
+      <div id="progress-text">0%</div>
+    </div>
+  </div>
+
+  <!-- Background 3D Canvas (Preserved existing background animation) -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- Navigation Header (Transparent on Home, Dark Glass from About section downwards) -->
+  <header id="navbar">
+    <div class="nav-container">
+      <a href="#hero" class="nav-logo">
+        <span class="logo-name">MUTHAMIZH S</span>
+        <span class="logo-role">Senior .NET Developer</span>
+      </a>
+
+      <nav class="nav-menu" id="nav-menu">
+        <a href="#hero" class="nav-link active">Home</a>
+        <a href="#about" class="nav-link">About</a>
+        <a href="#experience" class="nav-link">Experience</a>
+        <a href="#projects" class="nav-link">Projects</a>
+        <a href="#skills" class="nav-link">Skills</a>
+        <a href="#awards" class="nav-link">Awards & Edu</a>
+        <a href="/Muthamizh_S_Resume.pdf" target="_blank" rel="noopener noreferrer" class="nav-link btn-nav-resume">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17"/></svg>
+          <span>Resume</span>
+        </a>
+        <a href="#contact" class="nav-link btn-nav-cta">Contact</a>
+      </nav>
+
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Content Wrapper layered over 3D background -->
+  <main id="content-wrapper">
+
+    <!-- HERO SECTION -->
+    <section id="hero" class="section hero-section">
+      <div class="container hero-container">
+        <div class="hero-card glass-panel">
+          <div class="badge-role">
+            <span class="badge-dot"></span> 5+ Years Enterprise Experience
+          </div>
+          <h1 class="hero-name">Muthamizh S</h1>
+          <h2 class="hero-title"><span id="typed-title"></span><span class="typing-cursor">|</span></h2>
+          <p class="hero-headline">
+            Building reliable enterprise applications with .NET, cloud and modern development practices.
+          </p>
+          <div class="hero-actions">
+            <a href="#projects" class="btn btn-primary">View Projects</a>
+            <a href="/Muthamizh_S_Resume.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-resume">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17"/></svg>
+              <span>Download Resume</span>
+            </a>
+            <a href="#contact" class="btn btn-outline">Contact Me</a>
+          </div>
+          <div class="hero-socials">
+            <a href="https://linkedin.com/in/muthamizh1002" target="_blank" rel="noopener noreferrer" class="social-link" title="LinkedIn">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+              <span>LinkedIn</span>
+            </a>
+            <a href="https://github.com/Muthamizh1002" target="_blank" rel="noopener noreferrer" class="social-link" title="GitHub">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>
+              <span>GitHub</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about" class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-subtitle">OVERVIEW</span>
+          <h2 class="section-title">Professional Summary</h2>
+        </div>
+        <div class="glass-panel about-card">
+          <p class="about-lead">
+            Senior .NET Developer with <strong>5+ years of experience</strong> in enterprise application development, enhancement, and production support.
+          </p>
+          <div class="about-highlights">
+            <div class="highlight-item">
+              <div class="highlight-icon">⚡</div>
+              <div class="highlight-info">
+                <h4>Core .NET & C#</h4>
+                <p>Extensive experience with C#, ASP.NET MVC, ASP.NET Core, and Web API architecture.</p>
+              </div>
+            </div>
+            <div class="highlight-item">
+              <div class="highlight-icon">🗄️</div>
+              <div class="highlight-info">
+                <h4>SQL Server Optimization</h4>
+                <p>Troubleshooting query performance bottlenecks, batch failures, and data mismatches.</p>
+              </div>
+            </div>
+            <div class="highlight-item">
+              <div class="highlight-icon">☁️</div>
+              <div class="highlight-info">
+                <h4>Azure & DevOps</h4>
+                <p>Designing Azure DevOps CI/CD pipelines, IIS web server administration, and Azure VM deployments.</p>
+              </div>
+            </div>
+            <div class="highlight-item">
+              <div class="highlight-icon">🛠️</div>
+              <div class="highlight-info">
+                <h4>Production Support & Agile</h4>
+                <p>L2/L3 production issue resolution within SLA, ServiceNow incident management, and Agile delivery.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE SECTION -->
+    <section id="experience" class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-subtitle">CAREER HISTORY</span>
+          <h2 class="section-title">Professional Experience</h2>
+        </div>
+
+        <div class="glass-panel experience-card">
+          <div class="timeline">
+
+            <!-- Experience 1: TCS -->
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <div class="timeline-header">
+                  <div>
+                    <h3 class="role-title">Senior .NET Developer – Willis Towers Watson</h3>
+                    <h4 class="company-name">Tata Consultancy Services Limited (TCS)</h4>
+                  </div>
+                  <div class="role-meta">
+                    <span class="role-date">Jan 2025 – Present</span>
+                    <span class="role-location">Chennai, TN</span>
+                  </div>
+                </div>
+                <ul class="experience-bullets">
+                  <li>Own end-to-end technical application support and enhancement of a business-critical enterprise insurance application.</li>
+                  <li>Provide L2/L3 production support, resolving functional, data, and performance issues within strict SLA deadlines.</li>
+                  <li>Develop application enhancements and production fixes using ASP.NET MVC, Web API, AngularJS, and SQL Server.</li>
+                  <li>Troubleshoot complex SQL Server issues including data mismatches, batch failures, query optimization, and performance bottlenecks.</li>
+                  <li>Manage incidents through ServiceNow and execute seamless deployments on Azure VMs and IIS, including post-deployment validation.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Experience 2: Infosys -->
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <div class="timeline-header">
+                  <div>
+                    <h3 class="role-title">Senior Operations Executive – Open University</h3>
+                    <h4 class="company-name">Infosys Limited</h4>
+                  </div>
+                  <div class="role-meta">
+                    <span class="role-date">Jul 2021 – Dec 2024</span>
+                    <span class="role-location">Chennai, TN</span>
+                  </div>
+                </div>
+                <ul class="experience-bullets">
+                  <li>Developed and enhanced application modules using C# and ASP.NET MVC.</li>
+                  <li>Migrated legacy VB.NET codebase to C#, improving system maintainability, readability, and execution speed.</li>
+                  <li>Implemented defect fixes, new features, and production changes while collaborating closely with client and technical teams.</li>
+                  <li>Designed and optimized Azure DevOps CI/CD pipelines to support end-to-end automated application deployments.</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PERSONAL PROJECTS SECTION -->
+    <section id="projects" class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-subtitle">PORTFOLIO WORK</span>
+          <h2 class="section-title">Personal Projects</h2>
+        </div>
+
+        <div class="featured-project-card glass-panel">
+          <div class="project-tag">FEATURED PROJECT</div>
+          <h3 class="project-title">HYPERLYNK</h3>
+          <p class="project-subtitle">Modern Digital Solutions & Web Experience Platform</p>
+          <p class="project-url">
+            <a href="https://hyperlynk.co.in" target="_blank" rel="noopener noreferrer" class="project-url-link">🌐 https://hyperlynk.co.in</a>
+          </p>
+          <p class="project-description">
+            HyperLynk is a modern digital solutions/web development project created to demonstrate my ability to design and build a polished, modern web experience using contemporary development and AI-assisted workflows.
+          </p>
+
+          <div class="project-highlights-grid">
+            <div class="project-highlight-box">
+              <span class="box-icon">🎨</span>
+              <h4>Clean UI/UX</h4>
+              <p>Responsive, minimalist interface design centered around readability and user interaction.</p>
+            </div>
+            <div class="project-highlight-box">
+              <span class="box-icon">🤖</span>
+              <h4>AI-Assisted Workflow</h4>
+              <p>Leveraged ChatGPT, GitHub Copilot, and AI tools for rapid prototyping and architecture.</p>
+            </div>
+            <div class="project-highlight-box">
+              <span class="box-icon">🚀</span>
+              <h4>Production Standard</h4>
+              <p>Independent project execution with emphasis on high-quality web experience standards.</p>
+            </div>
+          </div>
+
+          <div class="project-footer">
+            <div class="project-links">
+              <a href="https://hyperlynk.co.in" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                <span>Visit HyperLynk (hyperlynk.co.in)</span>
+              </a>
+              <a href="https://github.com/Muthamizh1002" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>
+                <span>View GitHub Repo</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TECHNICAL SKILLS SECTION -->
+    <section id="skills" class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-subtitle">CAPABILITIES</span>
+          <h2 class="section-title">Technical Skills</h2>
+        </div>
+
+        <div class="skills-grid">
+
+          <div class="skill-card glass-panel">
+            <h3 class="skill-category-title">Languages</h3>
+            <div class="skill-tags">
+              <span class="skill-tag">C#</span>
+              <span class="skill-tag">SQL</span>
+              <span class="skill-tag">JavaScript</span>
+              <span class="skill-tag">jQuery</span>
+              <span class="skill-tag">HTML</span>
+              <span class="skill-tag">CSS</span>
+            </div>
+          </div>
+
+          <div class="skill-card glass-panel">
+            <h3 class="skill-category-title">Frameworks</h3>
+            <div class="skill-tags">
+              <span class="skill-tag">ASP.NET MVC</span>
+              <span class="skill-tag">ASP.NET Core</span>
+              <span class="skill-tag">Web API</span>
+              <span class="skill-tag">AngularJS</span>
+            </div>
+          </div>
+
+          <div class="skill-card glass-panel">
+            <h3 class="skill-category-title">Databases</h3>
+            <div class="skill-tags">
+              <span class="skill-tag">Microsoft SQL Server</span>
+            </div>
+          </div>
+
+          <div class="skill-card glass-panel">
+            <h3 class="skill-category-title">Cloud & DevOps</h3>
+            <div class="skill-tags">
+              <span class="skill-tag">Microsoft Azure</span>
+              <span class="skill-tag">Azure DevOps</span>
+              <span class="skill-tag">IIS</span>
+              <span class="skill-tag">CI/CD Pipelines</span>
+            </div>
+          </div>
+
+          <div class="skill-card glass-panel">
+            <h3 class="skill-category-title">Tools & Platforms</h3>
+            <div class="skill-tags">
+              <span class="skill-tag">Visual Studio</span>
+              <span class="skill-tag">ServiceNow</span>
+            </div>
+          </div>
+
+          <div class="skill-card glass-panel">
+            <h3 class="skill-category-title">Version Control</h3>
+            <div class="skill-tags">
+              <span class="skill-tag">Git</span>
+              <span class="skill-tag">GitHub</span>
+              <span class="skill-tag">Azure Repos</span>
+            </div>
+          </div>
+
+          <!-- Full-width end-to-end screen card for AI Development Tools with standard non-blue skill tags in a single line -->
+          <div class="skill-card glass-panel skill-card-full">
+            <h3 class="skill-category-title">AI Development Tools</h3>
+            <div class="skill-tags skill-tags-inline">
+              <span class="skill-tag">ChatGPT</span>
+              <span class="skill-tag">GitHub Copilot</span>
+              <span class="skill-tag">Google Antigravity</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- AWARDS & EDUCATION SECTION -->
+    <section id="awards" class="section">
+      <div class="container">
+        <div class="awards-edu-grid">
+
+          <!-- Awards & Certifications -->
+          <div class="glass-panel awards-panel">
+            <div class="section-header align-left">
+              <span class="section-subtitle">RECOGNITION</span>
+              <h2 class="section-title">Awards & Certifications</h2>
+            </div>
+
+            <div class="award-group">
+              <h4>Awards</h4>
+              <ul class="custom-list">
+                <li><span class="list-bullet">🏆</span> TCS Let’s Clap Award</li>
+                <li><span class="list-bullet">🏆</span> TCS Best Team Performance Award</li>
+                <li><span class="list-bullet">🏆</span> Infosys INSTA Award – 3×</li>
+                <li><span class="list-bullet">🏆</span> TCS AI Hackathon Finalist</li>
+              </ul>
+            </div>
+
+            <div class="award-group">
+              <h4>Certifications</h4>
+              <ul class="custom-list">
+                <li><span class="list-bullet">📜</span> Generative AI & LLMs – TCS</li>
+                <li><span class="list-bullet">📜</span> Microsoft SQL Server – TCS</li>
+                <li><span class="list-bullet">📜</span> Agile Developer – Infosys</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Education -->
+          <div class="glass-panel edu-panel">
+            <div class="section-header align-left">
+              <span class="section-subtitle">ACADEMICS</span>
+              <h2 class="section-title">Education</h2>
+            </div>
+
+            <div class="edu-card">
+              <div class="edu-degree">B.Sc Mathematics</div>
+              <div class="edu-school">Karpagam Academy of Higher Education, Coimbatore</div>
+              <div class="edu-details">
+                <span class="edu-year">2018 – 2021</span>
+                <span class="edu-gpa">CGPA: 8.47 / 10</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="section">
+      <div class="container">
+        <div class="contact-card glass-panel">
+          <span class="section-subtitle">GET IN TOUCH</span>
+          <h2 class="contact-headline">Let's build something reliable.</h2>
+          <p class="contact-subtext">
+            Available for Senior .NET Developer roles, enterprise application enhancements, and cloud integration projects.
+          </p>
+
+          <div class="contact-grid">
+            <a href="mailto:muthamizh1002@gmail.com" class="contact-item">
+              <div class="contact-icon">✉️</div>
+              <div class="contact-info">
+                <span class="contact-label">Email</span>
+                <span class="contact-val">muthamizh1002@gmail.com</span>
+              </div>
+            </a>
+
+            <a href="tel:7502655129" class="contact-item">
+              <div class="contact-icon">📞</div>
+              <div class="contact-info">
+                <span class="contact-label">Phone</span>
+                <span class="contact-val">+91 7502655129</span>
+              </div>
+            </a>
+
+            <a href="https://linkedin.com/in/muthamizh1002" target="_blank" rel="noopener noreferrer" class="contact-item">
+              <div class="contact-icon">💼</div>
+              <div class="contact-info">
+                <span class="contact-label">LinkedIn</span>
+                <span class="contact-val">linkedin.com/in/muthamizh1002</span>
+              </div>
+            </a>
+
+            <a href="https://github.com/Muthamizh1002" target="_blank" rel="noopener noreferrer" class="contact-item">
+              <div class="contact-icon">💻</div>
+              <div class="contact-info">
+                <span class="contact-label">GitHub</span>
+                <span class="contact-val">github.com/Muthamizh1002</span>
+              </div>
+            </a>
+          </div>
+
+          <div class="contact-action">
+            <a href="mailto:muthamizh1002@gmail.com" class="btn btn-primary btn-lg">Get in Touch</a>
+            <a href="/Muthamizh_S_Resume.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-lg">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17"/></svg>
+              <span>Download Resume</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="footer">
+      <div class="container">
+        <p>Muthamizh S &middot; Senior .NET Full Stack Developer</p>
+      </div>
+    </footer>
+
+  </main>
+
+  <script type="module" src="/main.js"></script>
+</body>
+</html>
