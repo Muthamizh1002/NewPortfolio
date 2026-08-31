@@ -391,6 +391,12 @@ body {
   display: flex;
   align-items: center;
   padding-top: calc(var(--nav-height) + 40px);
+  padding-bottom: 140px;
+  margin-bottom: 120px;
+}
+
+#about {
+  padding-top: 160px;
 }
 
 .hero-container {
