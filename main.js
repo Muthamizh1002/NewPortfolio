@@ -1,4 +1,4 @@
-const TOTAL_FRAMES = 300;
+const TOTAL_FRAMES = 230;
 const LERP_FACTOR = 0.09; // Smooth inertia factor for canvas scrubbing
 
 const canvas = document.getElementById('bg-canvas');
