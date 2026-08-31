@@ -251,6 +251,24 @@ if (navToggle && navMenu) {
   });
 }
 
+// Proportional Desktop Canvas Scaling for Mobile Viewports
+function updateViewportScaling() {
+  const meta = document.querySelector('meta[name="viewport"]');
+  if (!meta) return;
+
+  const screenWidth = window.screen.width || window.innerWidth;
+  if (screenWidth < 1120) {
+    const targetWidth = 1120;
+    const scale = (screenWidth / targetWidth).toFixed(4);
+    meta.setAttribute('content', `width=${targetWidth}, initial-scale=${scale}, maximum-scale=3.0, user-scalable=yes`);
+  } else {
+    meta.setAttribute('content', 'width=device-width, initial-scale=1.0');
+  }
+}
+
+// Initialize viewport scaling
+updateViewportScaling();
+
 // Event Listeners
 window.addEventListener('scroll', () => {
   updateTargetFrame();
@@ -259,6 +277,7 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 window.addEventListener('resize', () => {
+  updateViewportScaling();
   updateCanvasSize();
   updateTargetFrame();
   updateActiveNavLink();
