@@ -12,6 +12,39 @@ let loadedCount = 0;
 let targetFrame = 0;
 let currentFrame = 0;
 let isLoaded = false;
+let isIntroFinished = false;
+let imagesReady = false;
+
+// Minimal Developer Workspace Initializing Intro Controller
+function startWorkspaceIntro() {
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReducedMotion) {
+    isIntroFinished = true;
+    checkCompleteAndTransition();
+    return;
+  }
+
+  // Phase 1: INITIALIZING state & progress line
+  // Phase 2 (0.3s): Soft ambient lighting glow activates behind center
+  setTimeout(() => {
+    if (loader) loader.classList.add('phase-2-active');
+  }, 350);
+
+  // Minimum intro timing before transition (~1.2s - 1.5s) for smooth fast feel
+  setTimeout(() => {
+    isIntroFinished = true;
+    checkCompleteAndTransition();
+  }, 1250);
+}
+
+function checkCompleteAndTransition() {
+  if (isIntroFinished && imagesReady) {
+    if (loader && !loader.classList.contains('loaded')) {
+      loader.classList.add('loaded');
+      setTimeout(loopTypewriter, 300);
+    }
+  }
+}
 
 // Infinite Looping Typing Animation State
 const textToType = "Senior .NET Full Stack Developer (C#)";
@@ -29,11 +62,9 @@ function loopTypewriter() {
   let speed = isDeleting ? 35 : 65;
 
   if (!isDeleting && charIndex === textToType.length) {
-    // Pause at full text before deleting
     speed = 2400;
     isDeleting = true;
   } else if (isDeleting && charIndex === 0) {
-    // Pause at empty text before typing again
     isDeleting = false;
     speed = 600;
   } else {
@@ -58,11 +89,10 @@ function updateCanvasSize() {
   canvas.width = width * dpr;
   canvas.height = height * dpr;
 
-  // Render current frame immediately on resize
   drawFrame(Math.round(currentFrame));
 }
 
-// Calculate cover mode positioning (keeps image aspect ratio filled across screen)
+// Calculate cover mode positioning
 function drawFrame(frameIndex) {
   if (!images[frameIndex] || !images[frameIndex].complete) return;
 
@@ -74,14 +104,12 @@ function drawFrame(frameIndex) {
   const imgW = img.naturalWidth || 1920;
   const imgH = img.naturalHeight || 1080;
 
-  // Object-fit cover scaling math
   const scale = Math.max(canvasW / imgW, canvasH / imgH);
   const drawW = imgW * scale;
   const drawH = imgH * scale;
   const x = (canvasW - drawW) / 2;
   const y = (canvasH - drawH) / 2;
 
-  // Reset transform and clear
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.drawImage(img, x, y, drawW, drawH);
 }
@@ -146,7 +174,7 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-// Preload all 300 frames into memory
+// Preload all frames into memory
 function preloadImages() {
   for (let i = 1; i <= TOTAL_FRAMES; i++) {
     const img = new Image();
@@ -157,7 +185,7 @@ function preloadImages() {
     };
     img.onerror = () => {
       console.warn(`Failed to load frame: ${src}`);
-      onImageLoad(); // Prevent locking
+      onImageLoad();
     };
     
     img.src = src;
@@ -172,6 +200,11 @@ function onImageLoad() {
   if (progressBar) progressBar.style.width = `${percentage}%`;
   if (progressText) progressText.innerText = `${percentage}%`;
 
+  if (loadedCount === 1) {
+    // Immediately render frame 1 behind dark overlay so workspace background is ready
+    drawFrame(0);
+  }
+
   if (loadedCount === TOTAL_FRAMES && !isLoaded) {
     isLoaded = true;
     onAllImagesLoaded();
@@ -184,19 +217,12 @@ function onAllImagesLoaded() {
   currentFrame = targetFrame;
   drawFrame(Math.round(currentFrame));
 
-  // Fade out loader smoothly
-  if (loader) {
-    loader.classList.add('loaded');
-  }
+  imagesReady = true;
 
-  // Start infinite looping typewriter animation
-  setTimeout(loopTypewriter, 300);
-
-  // Initial Navbar background state check
   updateNavbarBackground();
-
-  // Start smooth 3D animation loop
   requestAnimationFrame(animate);
+
+  checkCompleteAndTransition();
 }
 
 // Mobile Navigation Toggle
@@ -208,7 +234,6 @@ if (navToggle && navMenu) {
     navMenu.classList.toggle('active');
   });
 
-  // Close menu when clicking a link
   document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', () => {
       navMenu.classList.remove('active');
@@ -230,6 +255,7 @@ window.addEventListener('resize', () => {
   updateNavbarBackground();
 });
 
-// Initialize Preloading & Setup
+// Initialize Preloading & Workspace Intro Sequence
 updateCanvasSize();
+startWorkspaceIntro();
 preloadImages();
