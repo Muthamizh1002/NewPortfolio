@@ -74,10 +74,11 @@ function loopTypewriter() {
   typewriterTimeout = setTimeout(loopTypewriter, speed);
 }
 
-// Format frame index: e.g. 1 -> "/Background/ezgif-frame-001.png"
+// Format frame index: e.g. 1 -> "Background/ezgif-frame-001.png"
 function getFramePath(index) {
   const paddedIndex = String(index).padStart(3, '0');
-  return `/Background/ezgif-frame-${paddedIndex}.png`;
+  const base = import.meta.env.BASE_URL ? (import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/') : './';
+  return `${base}Background/ezgif-frame-${paddedIndex}.png`;
 }
 
 // Adjust canvas resolution for High-DPI (Retina) displays
