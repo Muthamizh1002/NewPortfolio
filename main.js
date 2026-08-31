@@ -177,6 +177,15 @@ function animate() {
 
 // Preload all frames into memory
 function preloadImages() {
+  // Safety timeout: Ensure intro never stalls permanently if network stalls
+  setTimeout(() => {
+    if (!imagesReady) {
+      console.warn("Preload safety timeout reached; forcing transition to homepage.");
+      imagesReady = true;
+      checkCompleteAndTransition();
+    }
+  }, 4500);
+
   for (let i = 1; i <= TOTAL_FRAMES; i++) {
     const img = new Image();
     const src = getFramePath(i);
