@@ -1,5 +1,15 @@
+// Ensure full browser reloads always start at Home section
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+window.scrollTo(0, 0);
+if (window.location.hash) {
+  history.replaceState(null, '', window.location.pathname + window.location.search);
+}
+
 const TOTAL_FRAMES = 230;
 const LERP_FACTOR = 0.09; // Smooth inertia factor for canvas scrubbing
+const MAX_CONCURRENT_DOWNLOADS = 4;
 
 const canvas = document.getElementById('bg-canvas');
 const ctx = canvas.getContext('2d', { alpha: false });
@@ -7,13 +17,17 @@ const progressBar = document.getElementById('progress-bar');
 const progressText = document.getElementById('progress-text');
 const loader = document.getElementById('loader');
 
-const images = [];
+const images = new Array(TOTAL_FRAMES).fill(null);
+const loadedFrames = new Set();
+const loadingFrames = new Set();
+
 let loadedCount = 0;
 let targetFrame = 0;
 let currentFrame = 0;
-let isLoaded = false;
 let isIntroFinished = false;
 let imagesReady = false;
+let isAnimRunning = false;
+let lastDrawnIndex = -1;
 
 // Minimal Developer Workspace Initializing Intro Controller
 function startWorkspaceIntro() {
@@ -81,6 +95,23 @@ function getFramePath(index) {
   return `${base}Background/ezgif-frame-${paddedIndex}.png`;
 }
 
+// Find closest already-loaded frame index to guarantee continuous smooth scrolling without freezes
+function getBestAvailableFrame(index) {
+  if (loadedFrames.has(index)) return index;
+
+  let offset = 1;
+  while (offset < TOTAL_FRAMES) {
+    const prev = index - offset;
+    if (prev >= 0 && loadedFrames.has(prev)) return prev;
+
+    const next = index + offset;
+    if (next < TOTAL_FRAMES && loadedFrames.has(next)) return next;
+
+    offset++;
+  }
+  return null;
+}
+
 // Adjust canvas resolution for High-DPI (Retina) displays
 function updateCanvasSize() {
   const dpr = window.devicePixelRatio || 1;
@@ -90,17 +121,20 @@ function updateCanvasSize() {
   canvas.width = width * dpr;
   canvas.height = height * dpr;
 
-  drawFrame(Math.round(currentFrame));
+  drawFrame(Math.round(currentFrame), true);
 }
 
-// Calculate cover mode positioning
-function drawFrame(frameIndex) {
-  if (!images[frameIndex] || !images[frameIndex].complete) return;
+// Calculate cover mode positioning and draw image
+function drawFrame(frameIndex, forceRedraw = false) {
+  const bestIndex = getBestAvailableFrame(frameIndex);
+  if (bestIndex === null || !images[bestIndex]) return;
+
+  if (!forceRedraw && bestIndex === lastDrawnIndex) return;
 
   const dpr = window.devicePixelRatio || 1;
   const canvasW = window.innerWidth;
   const canvasH = window.innerHeight;
-  const img = images[frameIndex];
+  const img = images[bestIndex];
 
   const imgW = img.naturalWidth || 1920;
   const imgH = img.naturalHeight || 1080;
@@ -113,6 +147,7 @@ function drawFrame(frameIndex) {
 
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.drawImage(img, x, y, drawW, drawH);
+  lastDrawnIndex = bestIndex;
 }
 
 // Calculate target frame index from total page scroll position
@@ -175,7 +210,109 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-// Preload all frames into memory
+// Priority-based queue logic for controlled progressive preloading
+function getNextFrameToLoad() {
+  // Priority 1: Current target frame & nearby frames (targetFrame +/- 5)
+  const roundedTarget = Math.round(targetFrame);
+  for (let offset = 0; offset <= 5; offset++) {
+    const candidate1 = roundedTarget + offset;
+    if (candidate1 >= 0 && candidate1 < TOTAL_FRAMES && !loadedFrames.has(candidate1) && !loadingFrames.has(candidate1)) {
+      return candidate1;
+    }
+    const candidate2 = roundedTarget - offset;
+    if (candidate2 >= 0 && candidate2 < TOTAL_FRAMES && !loadedFrames.has(candidate2) && !loadingFrames.has(candidate2)) {
+      return candidate2;
+    }
+  }
+
+  // Priority 2: Nearby initial frames (0 to 10)
+  for (let i = 0; i <= 10; i++) {
+    if (i < TOTAL_FRAMES && !loadedFrames.has(i) && !loadingFrames.has(i)) {
+      return i;
+    }
+  }
+
+  // Priority 3: Evenly spaced keyframes (every 10 frames)
+  for (let i = 0; i < TOTAL_FRAMES; i += 10) {
+    if (!loadedFrames.has(i) && !loadingFrames.has(i)) {
+      return i;
+    }
+  }
+
+  // Priority 4: Remaining frames in sequence order
+  for (let i = 0; i < TOTAL_FRAMES; i++) {
+    if (!loadedFrames.has(i) && !loadingFrames.has(i)) {
+      return i;
+    }
+  }
+
+  return null;
+}
+
+function processQueue() {
+  while (loadingFrames.size < MAX_CONCURRENT_DOWNLOADS) {
+    const nextIndex = getNextFrameToLoad();
+    if (nextIndex === null) break;
+    loadFrame(nextIndex);
+  }
+}
+
+function loadFrame(index) {
+  loadingFrames.add(index);
+  const img = new Image();
+  const src = getFramePath(index + 1);
+
+  const onComplete = () => {
+    loadingFrames.delete(index);
+    images[index] = img;
+    loadedFrames.add(index);
+    onImageLoad(index);
+    processQueue();
+  };
+
+  img.onload = () => {
+    if ('decode' in img) {
+      img.decode().then(onComplete).catch(onComplete);
+    } else {
+      onComplete();
+    }
+  };
+
+  img.onerror = () => {
+    console.warn(`Failed to load frame: ${src}`);
+    loadingFrames.delete(index);
+    processQueue();
+  };
+
+  img.src = src;
+}
+
+function onImageLoad(index) {
+  loadedCount++;
+  const percentage = Math.min(100, Math.floor((loadedCount / TOTAL_FRAMES) * 100));
+
+  if (progressBar) progressBar.style.width = `${percentage}%`;
+  if (progressText) progressText.innerText = `${percentage}%`;
+
+  // As soon as Frame 0 is loaded and decoded, render immediately & unblock intro
+  if (index === 0 || loadedFrames.has(0)) {
+    if (lastDrawnIndex === -1) {
+      drawFrame(0, true);
+    }
+    if (!imagesReady) {
+      imagesReady = true;
+      checkCompleteAndTransition();
+    }
+  }
+
+  // Ensure scrubbing animation loop starts as soon as initial frame is ready
+  if (!isAnimRunning && loadedCount >= 1) {
+    isAnimRunning = true;
+    requestAnimationFrame(animate);
+  }
+}
+
+// Preload frames using controlled concurrent priority queue
 function preloadImages() {
   // Safety timeout: Ensure intro never stalls permanently if network stalls
   setTimeout(() => {
@@ -186,53 +323,7 @@ function preloadImages() {
     }
   }, 4500);
 
-  for (let i = 1; i <= TOTAL_FRAMES; i++) {
-    const img = new Image();
-    const src = getFramePath(i);
-    
-    img.onload = () => {
-      onImageLoad();
-    };
-    img.onerror = () => {
-      console.warn(`Failed to load frame: ${src}`);
-      onImageLoad();
-    };
-    
-    img.src = src;
-    images.push(img);
-  }
-}
-
-function onImageLoad() {
-  loadedCount++;
-  const percentage = Math.min(100, Math.floor((loadedCount / TOTAL_FRAMES) * 100));
-
-  if (progressBar) progressBar.style.width = `${percentage}%`;
-  if (progressText) progressText.innerText = `${percentage}%`;
-
-  if (loadedCount === 1) {
-    // Immediately render frame 1 behind dark overlay so workspace background is ready
-    drawFrame(0);
-  }
-
-  if (loadedCount === TOTAL_FRAMES && !isLoaded) {
-    isLoaded = true;
-    onAllImagesLoaded();
-  }
-}
-
-function onAllImagesLoaded() {
-  updateCanvasSize();
-  updateTargetFrame();
-  currentFrame = targetFrame;
-  drawFrame(Math.round(currentFrame));
-
-  imagesReady = true;
-
-  updateNavbarBackground();
-  requestAnimationFrame(animate);
-
-  checkCompleteAndTransition();
+  processQueue();
 }
 
 // Mobile Navigation Toggle
@@ -274,6 +365,7 @@ window.addEventListener('scroll', () => {
   updateTargetFrame();
   updateActiveNavLink();
   updateNavbarBackground();
+  processQueue();
 }, { passive: true });
 
 window.addEventListener('resize', () => {
@@ -288,3 +380,4 @@ window.addEventListener('resize', () => {
 updateCanvasSize();
 startWorkspaceIntro();
 preloadImages();
+
